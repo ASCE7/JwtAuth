@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  jwt-auth-api: 
+    image: jwt-auth-api
+    container_name: jwt-auth-api
+    ports:
+     - "5000:80"
+      
+  jwt-auth-ng: 
+    image: jwt-auth-ng
+    container_name: jwt-auth-ng
+    ports:
+      - "80:80"
