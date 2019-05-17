@@ -25,7 +25,7 @@
   
   <i>The ng app will be available at <code>localhost:4200</code>, while the API at <code>localhost:5000</code>.</i>
   
-  <br><br><br>
+  <br>
   <b>Credentials</b><br>
   username: user<br>
   password: pass
