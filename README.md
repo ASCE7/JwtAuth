@@ -15,9 +15,9 @@
   <br><code>docker-compose up</code><br>
 
 <i>The ng app will be available at <code>localhost:80</code>, while the API at <code>localhost:5000</code>.</i>
-<br><br><br>
+<br><br>
 
-<b>Running on local machine</b><br>
+<b>Running directly on local machine</b><br>
 1. inside JwtAuth/JwtAuthApi folder, execute: 
   <br><code>dotnet run</code><br>
 2. inside JwtAuth/JwtAuthNg folder, execute: 
