@@ -1,4 +1,4 @@
-# ASP.NET Core 2.2 + Angular 7 JWT authorization
+# ASP.NET Core 2.2 + Angular 7 JWT authorization + Docker deployment
 
 <b>How to run:</b><br>
 <i>You can run the apps using docker containers or manually serving the apps on your local machine. Both procedures are described below</i><br>
