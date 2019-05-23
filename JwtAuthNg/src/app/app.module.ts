@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
-import { ConfigService, AuthGuard } from './shared';
+import { ConfigService, AuthGuard, LoginGuard } from './shared';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -23,7 +23,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
-    AuthGuard
+    AuthGuard,
+    LoginGuard
   ],
   bootstrap: [AppComponent]
 })
