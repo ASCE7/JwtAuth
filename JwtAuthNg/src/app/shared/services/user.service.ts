@@ -12,6 +12,7 @@ import { LoginCredentials } from '../models';
 export class UserService {
     tokenName: string = 'jwtToken';
     invalidLogin: boolean = false;
+    roleClaimName: string = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
 
     constructor(private http: HttpClient, private router: Router, private configService: ConfigService, private jwtHelper: JwtHelperService) { }
 
@@ -50,7 +51,16 @@ export class UserService {
     }
 
     isUserLoggedIn(): boolean {
-        const token = localStorage.getItem(this.tokenName);
+        var token = this.retrieveTokenFromLocalStorage();
         return token && !this.jwtHelper.isTokenExpired(token);
+    }
+
+    getUserRole(): string {
+        var decryptedToken = this.jwtHelper.decodeToken(this.retrieveTokenFromLocalStorage());
+        return decryptedToken[this.roleClaimName];
+    }
+
+    private retrieveTokenFromLocalStorage(): string {
+        return localStorage.getItem(this.tokenName);
     }
 }

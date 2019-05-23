@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JwtAuthApi.Controllers {
+namespace JwtAuthApi.Controllers
+{
     [Route("api/auth")]
     [ApiController]
-    public class AuthController : ControllerBase {
+    public class AuthController : ControllerBase
+    {
         private readonly AuthSettings settings;
 
         public AuthController(IOptions<AuthSettings> settings)
@@ -20,34 +22,43 @@ namespace JwtAuthApi.Controllers {
         }
         // GET api/values
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] LoginModel user) {
+        public IActionResult Login([FromBody] LoginModel user)
+        {
             var config = settings;
 
-            if (user == null) {
+            if (user == null)
+            {
                 return BadRequest("Invalid client request");
             }
 
-            if (user.UserName == "user" && user.Password == "pass") {
+            if (user.UserName == "user" && user.Password == "pass")
+            {
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
                 var tokenOptions = new JwtSecurityToken(
                     issuer: config.Issuer,
                     audience: config.Audience,
-                    claims : new List<Claim>(),
+                    claims: new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Role, "Manager")
+                    },
                     expires : DateTime.Now.AddMinutes(config.ExpirationTimeInMinutes),
                     signingCredentials : signinCredentials
                 );
 
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
                 return Ok(new { Token = tokenString });
-            } else {
+            }
+            else
+            {
                 return Unauthorized();
             }
         }
     }
 
-    public class LoginModel {
+    public class LoginModel
+    {
         public string UserName { get; set; }
         public string Password { get; set; }
     }
