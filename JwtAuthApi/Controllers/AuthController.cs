@@ -3,36 +3,46 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using JwtAuthApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace JwtAuthApi.Controllers {
-    [Route ("api/auth")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase {
+        private readonly AuthSettings settings;
+
+        public AuthController(IOptions<AuthSettings> settings)
+        {
+            this.settings = settings.Value;
+        }
         // GET api/values
-        [HttpPost, Route ("login")]
-        public IActionResult Login ([FromBody] LoginModel user) {
+        [HttpPost, Route("login")]
+        public IActionResult Login([FromBody] LoginModel user) {
+            var config = settings;
+
             if (user == null) {
-                return BadRequest ("Invalid client request");
+                return BadRequest("Invalid client request");
             }
 
             if (user.UserName == "user" && user.Password == "pass") {
-                var secretKey = new SymmetricSecurityKey (Encoding.UTF8.GetBytes ("superSecretKey@345"));
-                var signinCredentials = new SigningCredentials (secretKey, SecurityAlgorithms.HmacSha256);
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey));
+                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-                var tokeOptions = new JwtSecurityToken (
-                    issuer: "https://localhost:5000",
-                    audience: "https://localhost:5000",
-                    claims : new List<Claim> (),
-                    expires : DateTime.Now.AddMinutes (5),
+                var tokenOptions = new JwtSecurityToken(
+                    issuer: config.Issuer,
+                    audience: config.Audience,
+                    claims : new List<Claim>(),
+                    expires : DateTime.Now.AddMinutes(config.ExpirationTimeInMinutes),
                     signingCredentials : signinCredentials
                 );
 
-                var tokenString = new JwtSecurityTokenHandler ().WriteToken (tokeOptions);
-                return Ok (new { Token = tokenString });
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                return Ok(new { Token = tokenString });
             } else {
-                return Unauthorized ();
+                return Unauthorized();
             }
         }
     }
